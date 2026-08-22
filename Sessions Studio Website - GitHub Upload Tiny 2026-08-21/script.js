@@ -121,6 +121,7 @@ let isDraggingTabs = false;
 let tabDragStartX = 0;
 let tabDragStartScroll = 0;
 let tabDragDistance = 0;
+let didDragTabs = false;
 
 function setHeroSlide(index) {
   if (!heroSlides.length) {
@@ -197,7 +198,7 @@ function updateActiveTab(category) {
 
 tabButtons.forEach((button) => {
   button.addEventListener("click", (event) => {
-    if (tabDragDistance > 6) {
+    if (didDragTabs) {
       event.preventDefault();
       return;
     }
@@ -219,8 +220,7 @@ if (portfolioTabs) {
     tabDragStartX = event.clientX;
     tabDragStartScroll = portfolioTabs.scrollLeft;
     tabDragDistance = 0;
-    portfolioTabs.classList.add("is-dragging");
-    portfolioTabs.setPointerCapture(event.pointerId);
+    didDragTabs = false;
   });
 
   portfolioTabs.addEventListener("pointermove", (event) => {
@@ -230,6 +230,13 @@ if (portfolioTabs) {
 
     const distance = event.clientX - tabDragStartX;
     tabDragDistance = Math.max(tabDragDistance, Math.abs(distance));
+
+    if (tabDragDistance <= 6) {
+      return;
+    }
+
+    didDragTabs = true;
+    portfolioTabs.classList.add("is-dragging");
     portfolioTabs.scrollLeft = tabDragStartScroll - distance;
   });
 
@@ -241,13 +248,10 @@ if (portfolioTabs) {
     isDraggingTabs = false;
     portfolioTabs.classList.remove("is-dragging");
 
-    if (portfolioTabs.hasPointerCapture(event.pointerId)) {
-      portfolioTabs.releasePointerCapture(event.pointerId);
-    }
-
     window.setTimeout(() => {
       tabDragDistance = 0;
-    }, 0);
+      didDragTabs = false;
+    }, 80);
   }
 
   portfolioTabs.addEventListener("pointerup", stopDraggingTabs);
