@@ -49,36 +49,26 @@ a:hover {
   background: #f5f5f5;
 }
 
-.hero-image,
-.hero-video {
+.hero-slideshow {
   position: absolute;
   inset: 0;
   overflow: hidden;
 }
 
-.hero-image img {
+.hero-slide {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center 38%;
+  opacity: 0;
   filter: saturate(1.18) contrast(1.06);
+  transition: opacity 900ms ease;
 }
 
-.hero-video-hidden {
-  display: none;
-}
-
-.hero-video iframe {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 145.78vh;
-  min-width: 100vw;
-  height: 82vh;
-  min-height: 56.25vw;
-  border: 0;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
+.hero-slide.is-active {
+  opacity: 1;
 }
 
 .hero::after {
@@ -102,7 +92,7 @@ a:hover {
 
 .hero-mark {
   width: min(92vw, 720px);
-  padding: 30px 46px;
+  padding: 30px 46px 34px;
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 8px;
   background: rgba(17, 24, 39, 0.04);
@@ -154,7 +144,6 @@ a:hover {
   background: var(--color-background);
 }
 
-.work-section,
 .details-strip {
   background: rgba(255, 255, 255, 0.68);
 }
@@ -203,6 +192,62 @@ a:hover {
   color: var(--color-muted);
   font-size: 18px;
   line-height: 1.45;
+}
+
+.portfolio-tabs {
+  display: inline-flex;
+  max-width: 100%;
+  gap: 6px;
+  margin: 0 0 48px;
+  padding: 6px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: #f7f7f7;
+  overflow-x: auto;
+  cursor: grab;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  user-select: none;
+}
+
+.portfolio-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.portfolio-tabs.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+}
+
+.portfolio-tab {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-muted);
+  font: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  scroll-snap-align: start;
+}
+
+.portfolio-tab:hover,
+.portfolio-tab:focus-visible {
+  color: var(--color-text);
+}
+
+.portfolio-tab:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.portfolio-tab.is-active {
+  background: var(--color-background);
+  color: var(--color-text);
+  box-shadow: 0 1px 8px rgba(17, 17, 17, 0.08);
 }
 
 .portfolio-group + .portfolio-group {
@@ -269,33 +314,6 @@ a:hover {
 .lightbox button:focus-visible {
   outline: 2px solid var(--color-text);
   outline-offset: 4px;
-}
-
-.video-frame {
-  position: relative;
-  width: 100%;
-  height: 0;
-  padding-bottom: 56.25%;
-  border: 1px solid var(--glass-border);
-  border-radius: 8px;
-  background: var(--glass-background-strong);
-  backdrop-filter: blur(18px) saturate(120%);
-  -webkit-backdrop-filter: blur(18px) saturate(120%);
-  overflow: hidden;
-}
-
-.video-frame iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-
-.video-fallback {
-  margin: 14px 0 0;
-  color: var(--color-muted);
-  font-size: 14px;
 }
 
 .details-strip {
@@ -456,6 +474,16 @@ a:hover {
 
   .section-heading span {
     font-size: 16px;
+  }
+
+  .portfolio-tabs {
+    display: flex;
+    width: 100%;
+    margin-bottom: 36px;
+  }
+
+  .portfolio-tab {
+    flex: 0 0 auto;
   }
 
   .portfolio-group + .portfolio-group {
